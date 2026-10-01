@@ -13,8 +13,6 @@ class Square: public Shape {
     public:
     Square(int height, int width, int x, int y,int z, bool filled, Board* board,std::string color);
     void draw(Board* board);
-
-
 };
 
 
