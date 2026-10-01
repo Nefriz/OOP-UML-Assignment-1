@@ -53,6 +53,7 @@ void Board::draw() {
 
         for (Pixel& pixel : board[y]) {
             pixel.draw();
+            pixel.draw();
         }
 
         std::cout << '\n';
