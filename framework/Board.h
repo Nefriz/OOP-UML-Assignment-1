@@ -17,6 +17,7 @@ protected:
     void clear();
     void draw();
     void set_ratio(int new_ratio);
+    void set_pixel(int x, int y, std::string color, int depth);
 };
 
 
