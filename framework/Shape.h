@@ -17,8 +17,9 @@ protected:
     int z;
     std::string color;
     bool filled;
+    Board* board;
     public:
-    void draw(Board *board);
+    void draw(Board* board);
     void edit_filled(bool filled);
     void move(int new_x, int new_y);
     void set_color(std::string color);

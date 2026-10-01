@@ -1,14 +1,19 @@
 
 #include "Pixel.h"
 
-Pixel::Pixel(char symbol, int x, int y) {
+#include <iostream>
 
-    this->symbol = symbol;
-    this->X = x;
-    this->Y = y;
+Pixel::Pixel(int depth) {
+    this->depth = depth;
+    this->symbol = " ";
 }
-void Pixel::set_symbol(char symb) {
-    this->symbol = symb;
+void Pixel::set_symbol(std::string symb, int depth) {
+    if (this->depth <= depth){this->symbol = symb; this->depth = depth;}
 }
-void Pixel::set_color(std::string color) {this->color = color;}
-bool Pixel::is_here(int x, int y) { return this->Y == y && this->X == x;}
+void Pixel::set_color(std::string color, int depth) {
+    if (this->depth <= depth) {this->color = color; this->depth = depth;}
+}
+
+void Pixel::draw() {
+    std::cout << this->color << this->symbol << "\033[0m";
+}

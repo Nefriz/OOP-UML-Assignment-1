@@ -14,20 +14,23 @@ Triangle::Triangle(int height, bool filled, int x, int y, Board* board, int z, s
     this->color = color;
     this->board = board;
 }
-
 void Triangle::draw(Board* board) {
     for (int row = 0; row < height; row++) {
         int left_x = x - row;
         int right_x = x + row;
         if (this->filled) {
-            for (int change = 0 ; change <= row * 2 + 1; change++) {
-                board->set_pixel(left_x + change, row + y, this->color, this->z);
+            for (int change = 0; change < row * 2 + 1; change++) {
+                board->set_pixel(left_x + change,row + y,this->color,this->z,"R");
             }
-        }
-        else {
-                board->set_pixel(left_x,row + y, this->color, this->z);
-                board->set_pixel(right_x,row + y, this->color, this->z);
-
+        } else {
+            if (row == height - 1) {
+                for (int change = 0; change < height * 2 - 1; change++) {
+                    board->set_pixel(left_x + change,row + y,this->color,this->z,"R");
+                }
+            } else {
+                board->set_pixel(left_x, row + y,this->color,this->z,"R");
+                board->set_pixel(right_x,row + y,this->color,this->z,"R");
+            }
         }
     }
 }
