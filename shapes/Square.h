@@ -12,7 +12,8 @@ class Square: public Shape {
     int width;
     public:
     Square(int height, int width, int x, int y,int z, bool filled, Board* board,std::string color);
-    void draw(Board* board);
+    void draw(Board* board) override;
+    bool edit(const std::vector<int>& params) override;
 };
 
 

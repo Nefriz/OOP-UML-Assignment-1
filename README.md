@@ -38,11 +38,10 @@
 * ad "vertical" position as aditional params to draw it in vertical order
 
 #### TO-DO:
-1. UML 
-2. Implement basic classes 
-3. draw just a single figure
-4. draw multiple figure simultaneously
+1. UML (done)
+2. Implement basic classes (done) 
+3. draw just a single figure(done)
+4. draw multiple figure simultaneously(done)
 5. make a select functionality
 6. make a edit functionality
 7. make a nice board
-8. 

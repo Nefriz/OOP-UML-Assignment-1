@@ -11,7 +11,8 @@ private:
     int radius;
     public:
     Circle(int radius, int x, int y,int z, bool filled, Board* board,std::string color);
-    void draw(Board* board);
+    void draw(Board* board) override;
+    bool edit(const std::vector<int>& params) override;
 };
 
 
