@@ -134,8 +134,6 @@ void App::execute_command(std::string command) {
         }
 
         case 10: {
-            std::cout << "enter new X & Y & Z" << std::endl;
-
             int x, y, z;
             stream >> x >> y >> z;
 
@@ -179,13 +177,13 @@ void App::create_object(std::stringstream &stream) {
                 return;
             }
         }
-        object = new Circle(radius, filled, x, y, z,&board, color);
+        object = new Circle(radius, x, y, z,filled, &board, color);
     };
     if (type == "square") {
         int height, width, filled, x, y, z;
         std::string color;
         stream >> height >> width >> filled >> x >> y >> z >> color;
-        object = new Square(height,width, filled, x, y, z,&board, color);
+        object = new Square(height,width, x, y, z,filled,&board, color);
     }
     if (object != nullptr) {
         board.add_object(object);

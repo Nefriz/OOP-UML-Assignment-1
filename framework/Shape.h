@@ -22,6 +22,7 @@ protected:
     public:
     virtual bool edit(const std::vector<int>& params) = 0;
     virtual void draw(Board* board) = 0;;
+    virtual ~Shape() = default;
     void edit_filled(bool filled);
     void move(int new_x, int new_y, int new_z);
     void set_color(std::string color);

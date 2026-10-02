@@ -14,6 +14,7 @@ Board::Board(int width, int height) {
     this->width = width;
     this->height = height;
     this->object_count = 0;
+    this->selected_object = nullptr;
     for (int y = 0; y < height; y++) {
 
         std::vector<Pixel> row;
@@ -82,8 +83,8 @@ void Board::add_object(Shape* object) {
     object->set_id(object_count);
 }
 void Board::reshuffle_id() {
-    for (int i = 1; i <= object_count; i++) {
-        object_list[i]->set_id(i);
+    for (int i = 0; i < object_list.size(); i++) {
+        object_list[i]->set_id(i + 1);
     }
 }
 
@@ -150,6 +151,10 @@ void Board::clear_buffer() {
 }
 
 void Board::move(int x, int y, int z) {
+    if (selected_object == nullptr) {
+        std::cout << "No object selected" << std::endl;
+        return;
+    }
     selected_object->move(x, y, z);
 }
 
