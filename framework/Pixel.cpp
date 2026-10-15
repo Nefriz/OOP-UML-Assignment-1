@@ -2,9 +2,11 @@
 #include "Pixel.h"
 
 #include <iostream>
-#include <unordered_map>
+#include <map>
 
-std::unordered_map<std::string, std::string> colors = {
+
+
+std::map<std::string, std::string> colors = {
     {"black","\033[30m"},
     {"red","\033[31m"},
     {"green","\033[32m"},
@@ -14,7 +16,7 @@ std::unordered_map<std::string, std::string> colors = {
     {"cyan","\033[36m"},
     {"white","\033[37m"}
 };
-std::unordered_map<std::string, std::string> symbs = {
+std::map<std::string, std::string> symbs = {
     {"black","B"},
     {"red","R"},
     {"green","G"},

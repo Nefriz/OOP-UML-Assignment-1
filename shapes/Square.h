@@ -2,8 +2,7 @@
 // Created by 16102 on 01.10.2026.
 //
 
-#ifndef ASSIGNMENT01_SQUARE_H
-#define ASSIGNMENT01_SQUARE_H
+#pragma once
 
 #include "../framework/Shape.h"
 class Square: public Shape {
@@ -15,6 +14,3 @@ class Square: public Shape {
     void draw(Board* board) override;
     bool edit(const std::vector<int>& params) override;
 };
-
-
-#endif //ASSIGNMENT01_SQUARE_H

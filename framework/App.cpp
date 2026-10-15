@@ -7,6 +7,8 @@
 #include <map>
 #include <sstream>
 #include "App.h"
+#include <fstream>
+#include <vector>
 
 #include "Shape.h"
 #include "../shapes/Triangle.h"
@@ -26,7 +28,9 @@ std::unordered_map<std::string, int> commands{
     {"paint", 9},
     {"move", 10},
     {"clear", 11},
-    {"help", 12}
+    {"help", 12},
+    {"save", 13},
+    {"load", 14}
 };
 
 App::App() : board(50, 20) {
@@ -44,7 +48,9 @@ void App::help() {
         {8, "edit <params>"},
         {9, "paint <color>"},
         {10, "move <x> <y> <z>"},
-        {11, "clear"}
+        {11, "clear"},
+        {12, "save"},
+        {13, "load"},
     };
 
     for (const auto& [number, name] : help_commands) {
@@ -69,13 +75,15 @@ void App::run() {
     }
 };
 
-void App::execute_command(std::string command) {
+void App::execute_command(std::string& command) {
     std::stringstream stream(command);
 
     std::string action;
     stream >> action;
 
-    switch (commands[action]) {
+    command_history.push_back(command);
+
+    switch (commands.at(action)) {
         case 1:
             board.draw();
             break;
@@ -148,6 +156,23 @@ void App::execute_command(std::string command) {
         case 12:
             this->help();
             break;
+        case 13: {
+            std::string filename;
+            stream >> filename;
+
+            save_commands(filename);
+            std::cout << "Board saved" << std::endl;
+            break;
+        }
+
+        case 14: {
+            std::string filename;
+            stream >> filename;
+
+            load_commands(filename);
+            std::cout << "Board loaded" << std::endl;
+            break;
+        }
         default:
             std::cerr << "Unknown command \"" << command << "\"" << std::endl;
             break;
@@ -186,9 +211,46 @@ void App::create_object(std::stringstream &stream) {
         object = new Square(height,width, x, y, z,filled,&board, color);
     }
     if (object != nullptr) {
+        if (!board.is_inside(object->get_x(), object->get_y())) {
+            std::cout << "Coordinates outside the board" << std::endl;
+            delete object;
+            return;
+        }
         board.add_object(object);
         std::cout << std::endl << "object added" << std::endl;
         return;
     }
     std::cout << "Object not found" << std::endl;
+}
+void App::save_commands(std::string& filename) {
+    std::ofstream file(filename);
+
+    for (const std::string& command : command_history) {
+        std::istringstream stream(command);
+        std::string action;
+        stream >> action;
+
+        if (action == "save" || action == "load") {
+            continue;
+        }
+
+        file << command << '\n';
+    }
+}
+void App::load_commands(std::string& filename) {
+    std::ifstream file(filename);
+    std::vector<std::string> loaded_commands;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            loaded_commands.push_back(line);
+        }
+    }
+    board.clear();
+    command_history.clear();
+
+    for (std::string& command : loaded_commands) {
+        execute_command(command);
+    }
 }

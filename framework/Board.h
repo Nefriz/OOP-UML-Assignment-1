@@ -15,12 +15,12 @@ protected:
     std::vector<std::vector<Pixel>> board;
     std::vector<Shape*> object_list;
     Shape* selected_object;
-    int width, height;
+    int width, height = 0;
     int pixel_ratio;
     int object_count;
     void reshuffle_id();
     void clear_buffer();
-    public:
+public:
     Board(int width, int height);
     void edit(const std::vector<int>& params);
     void clear();
@@ -35,6 +35,7 @@ protected:
     void paint(std::string color);
     void move(int x, int y, int z);
     void shapes();
+    bool is_inside(int x, int y);
 };
 
 
