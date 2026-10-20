@@ -22,18 +22,18 @@ protected:
     void clear_buffer();
 public:
     Board(int width, int height);
-    void edit(const std::vector<int>& params);
+    bool edit(const std::vector<int>& params);
     void clear();
     void draw();
     void set_ratio(int new_ratio);
     void set_pixel(int x, int y, std::string color, int depth, std::string symbol, int id);
     void show_list();
     void add_object(Shape* object);
-    void remove_object();
-    void select_object_id(int id);
-    void select_object(int x, int y);
-    void paint(std::string color);
-    void move(int x, int y, int z);
+    bool remove_object();
+    bool select_object_id(int id);
+    bool select_object(int x, int y);
+    bool paint(std::string color);
+    bool move(int x, int y, int z);
     void shapes();
     bool is_inside(int x, int y);
 };

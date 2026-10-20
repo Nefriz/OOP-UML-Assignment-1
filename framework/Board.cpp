@@ -60,19 +60,20 @@ void Board::draw() {
     for (Shape* shape : object_list) {
         shape->draw(this);
     }
-    for (int i = 0; i < width; i++) {
-        std::cout << "-";
+    for (int i = 0; i <= width; i++) {
+        std::cout << "--";
     }
     std::cout << std::endl;
     for (int y = 0; y < height; y++) {
+        std::cout << '|';
         for (Pixel& pixel : board[y]) {
             pixel.draw();
             pixel.draw();
         }
-        std::cout << '\n';
+        std::cout << '|'  << std::endl;
     }
-    for (int i = 0; i < width; i++) {
-        std::cout << "-";
+    for (int i = 0; i <= width; i++) {
+        std::cout << "--";
     }
     std::cout << std::endl;
 }
@@ -88,10 +89,10 @@ void Board::reshuffle_id() {
     }
 }
 
-void Board::remove_object() {
+bool Board::remove_object() {
     if (selected_object == nullptr) {
         std::cout << "No object selected" << std::endl;
-        return;
+        return false;
     }
 
     int id = selected_object->get_id();
@@ -103,9 +104,10 @@ void Board::remove_object() {
             object_count = object_list.size();
             reshuffle_id();
             std::cout << "Object removed" << std::endl;
-            return;
+            return true;
         }
     }
+    return false;
 }
 
 void Board::show_list() {
@@ -118,28 +120,43 @@ void Board::show_list() {
     }
 }
 
-void Board::select_object(int x, int y) {
+bool Board::select_object(int x, int y) {
+    if (x >= width || x < 0 || y >= height || y < 0) {
+        std::cout << "x y not in bounds" << std::endl;
+        return false;
+    }
     int id = this->board[y][x].get_obj_id();
     if (id == -1) {
         std::cout << "No object selected" << std::endl;
-        return;
+        return false;
     }
     this->selected_object = object_list[id - 1];
     std::cout << "Selected object: " << id << std::endl;
+    return true;
 }
 
-void Board::select_object_id(int id) {
-    if (object_count == 0) { std::cout << "There are no objects" << std::endl; this->selected_object = nullptr; }
-    if (id > object_count || id <= 0) {std::cout <<"vrong id"<< id << std::endl; this->selected_object = object_list[0];};
+
+bool Board::select_object_id(int id) {
+    if (object_count == 0) {
+        std::cout << "There are no objects" << std::endl;
+        this->selected_object = nullptr;
+        return false;}
+    if (id > object_count || id <= 0) {
+        std::cout <<"wrong id"<< id << std::endl;
+        this->selected_object = object_list[0];
+        return false;
+    };
     this->selected_object = object_list[id - 1];
     std::cout << "Selected object: " << id << std::endl;
+    return true;
 }
-void Board::paint(std::string color) {
+bool Board::paint(std::string color) {
     if (selected_object == nullptr) {
         std::cout << "No object selected" << std::endl;
-        return;
+        return false;
     }
     selected_object->set_color(color);
+    return true;
 }
 
 void Board::clear_buffer() {
@@ -150,12 +167,13 @@ void Board::clear_buffer() {
     }
 }
 
-void Board::move(int x, int y, int z) {
+bool Board::move(int x, int y, int z) {
     if (selected_object == nullptr) {
         std::cout << "No object selected" << std::endl;
-        return;
+        return false;
     }
     selected_object->move(x, y, z);
+    return true;
 }
 
 void Board::shapes() {
@@ -165,17 +183,17 @@ void Board::shapes() {
 
 }
 
-void Board::edit(const std::vector<int> &params) {
+bool Board::edit(const std::vector<int> &params) {
     if (selected_object == nullptr) {
-        std::cout << "No object selected" << std::endl; return;
+        std::cout << "No object selected" << std::endl;
+        return false;
     }
     if (selected_object->edit(params)) {
         std::cout << "Object Edited" << std::endl;
-        return;
-    } else {
-        std::cout << "Edit failed" << std::endl;
-        return;
-    }
+        return true;
+    };
+    return false;
+
 }
 
 bool Board::is_inside(int x, int y) {

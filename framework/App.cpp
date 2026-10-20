@@ -75,15 +75,17 @@ void App::run() {
     }
 };
 
-void App::execute_command(std::string& command) {
-    std::stringstream stream(command);
+void App::execute_command(std::string& input) {
+    std::stringstream stream(input);
 
     std::string action;
     stream >> action;
-
-    command_history.push_back(command);
-
-    switch (commands.at(action)) {
+    auto command = commands.find(action);
+    if (command == commands.end()) {
+        std::cout << "Unknown command \"" << action << "\"" << std::endl;
+        return;
+    }
+    switch (command -> second) {
         case 1:
             board.draw();
             break;
@@ -97,26 +99,33 @@ void App::execute_command(std::string& command) {
             break;
 
         case 4:
-            create_object(stream);
+            if(create_object(stream)) {
+                command_history.push_back(input);
+            };
             break;
 
         case 5: {
             int x, y;
             stream >> x >> y;
-            board.select_object(x, y);
+            if(board.select_object(x, y)) {
+                command_history.push_back(input);
+            };
             break;
         }
 
         case 6: {
             int id;
             stream >> id;
-            std::cout << id;
-            board.select_object_id(id);
+            if(board.select_object_id(id)) {
+                command_history.push_back(input);
+            };
             break;
         }
 
         case 7:
-            board.remove_object();
+            if(board.remove_object()) {
+                command_history.push_back(input);
+            };
             break;
 
         case 8: {;
@@ -127,7 +136,9 @@ void App::execute_command(std::string& command) {
                 params.push_back(value);
             }
 
-            board.edit(params);
+            if (board.edit(params)) {
+                command_history.push_back(input);
+            };
             break;
         }
 
@@ -137,7 +148,9 @@ void App::execute_command(std::string& command) {
             std::string color;
             stream >> color;
 
-            board.paint(color);
+            if(board.paint(color)) {
+                command_history.push_back(input);
+            };
             break;
         }
 
@@ -145,12 +158,15 @@ void App::execute_command(std::string& command) {
             int x, y, z;
             stream >> x >> y >> z;
 
-            board.move(x, y, z);
+            if(board.move(x, y, z)) {
+                command_history.push_back(input);
+            };
             break;
         }
 
         case 11:
             board.clear();
+            command_history.clear();
             std::cout << "board cleared" << std::endl;
             break;
         case 12:
@@ -161,7 +177,6 @@ void App::execute_command(std::string& command) {
             stream >> filename;
 
             save_commands(filename);
-            std::cout << "Board saved" << std::endl;
             break;
         }
 
@@ -170,16 +185,15 @@ void App::execute_command(std::string& command) {
             stream >> filename;
 
             load_commands(filename);
-            std::cout << "Board loaded" << std::endl;
             break;
         }
         default:
-            std::cerr << "Unknown command \"" << command << "\"" << std::endl;
+            std::cerr << "Unknown command \"" << input << "\"" << std::endl;
             break;
     }
 }
 
-void App::create_object(std::stringstream &stream) {
+bool App::create_object(std::stringstream &stream) {
     std::string type;
     stream >> type;
     Shape* object = nullptr;
@@ -189,7 +203,7 @@ void App::create_object(std::stringstream &stream) {
         std::string color;
         if (!(stream >> height >> filled >> x >> y >> z >> color)) {
             if (height <= 0){std::cout << "Wrong parameters" << std::endl;}
-            return;
+            return false;
         }
         object = new Triangle(height, filled, x, y, z,&board, color);
     };
@@ -199,7 +213,7 @@ void App::create_object(std::stringstream &stream) {
         if (!(stream >> radius >> filled >> x >> y >> z >> color)) {
             if (radius <= 0) {
                 std::cout << "Wrong parameters" << std::endl;
-                return;
+                return false;
             }
         }
         object = new Circle(radius, x, y, z,filled, &board, color);
@@ -214,13 +228,14 @@ void App::create_object(std::stringstream &stream) {
         if (!board.is_inside(object->get_x(), object->get_y())) {
             std::cout << "Coordinates outside the board" << std::endl;
             delete object;
-            return;
+            return false;
         }
         board.add_object(object);
         std::cout << std::endl << "object added" << std::endl;
-        return;
+        return true;
     }
     std::cout << "Object not found" << std::endl;
+    return false;
 }
 void App::save_commands(std::string& filename) {
     std::ofstream file(filename);
@@ -236,9 +251,14 @@ void App::save_commands(std::string& filename) {
 
         file << command << '\n';
     }
+    std::cout << "file saved:" << filename<< std::endl;
 }
 void App::load_commands(std::string& filename) {
     std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cout << "File not found" << std::endl;
+        return;
+    }
     std::vector<std::string> loaded_commands;
     std::string line;
 

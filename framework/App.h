@@ -14,7 +14,7 @@ private:
     std::vector<std::string> command_history;
 
     void execute_command(std::string& command);
-    void create_object(std::stringstream& stream);
+    bool create_object(std::stringstream& stream);
     void save_commands(std::string& filename);
     void load_commands(std::string& filename);
     void help();
